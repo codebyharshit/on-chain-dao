@@ -5,10 +5,11 @@ require("dotenv").config();
 
 const signer = new Wallet(process.env.REACT_APP_DEPLOYER_PRIV_KEY);
 const signerAddress = signer.address;
-const voterOne = process.env.voter_1;
-const voterTwo = process.env.voter_2;
-const voterThree = process.env.voter_3;
-const voterFour = process.env.voter_4;
+const voter_1 = process.env.voter_1;
+const voter_2 = process.env.voter_2;
+const voter_3 = process.env.voter_3;
+const voter_4 = process.env.voter_4;
+const proposerWallet = process.env.wallet;
 
 async function main() {
 
@@ -58,18 +59,18 @@ async function main() {
   
   console.log('Ownership transfer to :', timeLock.address);
   
-  await timeLock.grantRole(await timeLock.PROPOSER_ROLE(), governance.address);
+  
+  await token.mint(voter_1.address, 100000000);
+  await token.mint(voter_2.address, 100000000);
+  await token.mint(voter_3.address, 100000000);
+  await token.mint(voter_4.address, 100000000);
 
-  await token.mint(vote1.address, 100000000);
-  await token.mint(vote2.address, 100000000);
-  await token.mint(vote3.address, 100000000);
-  await token.mint(vote4.address, 100000000);
-
-  await token.connect(vote1).delegate(vote1.address);
-  await token.connect(vote2).delegate(vote2.address);
-  await token.connect(vote3).delegate(vote3.address);
-  await token.connect(vote4).delegate(vote4.address);
-
+  await token.connect(voter_1).delegate(voter_1.address);
+  await token.connect(voter_2).delegate(voter_2.address);
+  await token.connect(voter_3).delegate(voter_3.address);
+  await token.connect(voter_4).delegate(voter_4.address);
+  
+  await timeLock.grantRole(await timeLock.PROPOSER_ROLE(), proposerWallet.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
